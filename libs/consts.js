@@ -4,9 +4,10 @@ module.exports = {
             validityPeriod: 30*60*1000, // upload expires in 30 minutes
             folder: 'uploads',
             acl: 'private',
-            successRedirect: 'http://localhost:8080/upload',
+            successRedirectPath: '/upload',
             maxSize: 1024*1024*10, // 10 MB max upload size
             contentTypePrefix: 'image/jpeg'
         },
-    region: 'us-west-2'
+    region: 'us-west-2',
+    urlProtocol: 'http://' // prefix for all URLs coming back to this site
 }

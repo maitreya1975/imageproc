@@ -1,5 +1,4 @@
 /* GET users listing. */
-var AWS = require('aws-sdk');
 var form = require('../libs/formFields');
 
 exports.list = function(req, res) {
@@ -12,8 +11,7 @@ exports.list = function(req, res) {
             montageImg:"http://sierrafoothillgarden.files.wordpress.com/2011/03/yosemite-karen-greg-40.jpg"
         }
     ];
-    var formFields = form.getformfields(AWS.config.credentials.accessKeyId,
-        AWS.config.credentials.secretAccessKey);
+    var formFields = form.getformfields(req) 
     console.log('Form Fields=%s', JSON.stringify(formFields, null, " "));
 
     res.render('users', {
