@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Files for #{userid}
+  include uploadform
+  #images
+  if imageList.length == 0
+    p No images, upload one now.
+  else
+    for image in imageList
+      img(src='#{image.orgImg}')
+      img(src='#{image.sepiaImg}')
+      img(src='#{image.montageImg}')

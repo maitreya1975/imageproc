@@ -1,0 +1,13 @@
+#uploadform
+    form(action="https://maitreyr-imageproc.s3.amazonaws.com", method="post", enctype="multipart/form-data")
+        input(type="hidden", name="key", value="#{formFields.key}")
+        input(type="hidden", name="AWSAccessKeyId", value="#{formFields.accesskeyid}")
+        input(type="hidden", name="acl", value="private")
+        input(type="hidden", name="success_action_redirect", value="http://localhost:8080/upload")
+        input(type="hidden", name="policy", value="#{formFields.policy}")
+        input(type="hidden", name="signature", value="#{formFields.signature}")
+        input(type="hidden", name="Content-Type", value="image/jpeg")
+
+        label File to upload:
+        input(type="file",name="file")
+        input(type="submit", value="Upload to S3")

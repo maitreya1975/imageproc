@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #userform
+    form(method="post" action="/login")
+      p
+        label User ID:
+          input(type="text",name="userid")
+      button Login
