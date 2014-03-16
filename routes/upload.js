@@ -65,7 +65,7 @@ exports.handleUpload = function(req, res) {
                                   S: req.session.userid
                               },
                       filename: {
-                                  S: imgId
+                                    S: imgId
                                 },
                       bucket: {
                                   S: req.query.bucket

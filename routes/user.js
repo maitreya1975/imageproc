@@ -25,13 +25,13 @@ exports.list = function(req, res) {
         TableName: consts.dynamoDB.tableName,
         KeyConditions: {
             userid: {
-                ComparisonOperator: 'EQ',
-                AttributeValueList: [
-                    {
-                                S: userid
+                        ComparisonOperator: 'EQ',
+                        AttributeValueList: [
+                        {
+                            S: userid
+                        }
+                        ]
                     }
-                ]
-            }
         }
     }
 
@@ -50,64 +50,64 @@ exports.list = function(req, res) {
             var imgEntry = {
                 orgImg: userid + '/' + 'org' + '/' + imgId
             };
-	    if(item.transforms != undefined)  {
-	    	var renditions = item.transforms.SS;
-		renditions.forEach(function(format) {
-			imgEntry[format + "Img"]= userid + '/' + format + '/' + imgId;
-			});
-	    }
+            if(item.transforms != undefined)  {
+                var renditions = item.transforms.SS;
+                renditions.forEach(function(format) {
+                    imgEntry[format + "Img"]= userid + '/' + format + '/' + imgId;
+                });
+            }
             imageList.push(imgEntry);
         });
 
         console.log("ImageList: ", JSON.stringify(imageList));
 
         var s3SignedURLs = getS3SignedURLs(imageList, useSignedURLs);
-	function useSignedURLs(s3SignedURLs) {
-		console.log("Signed URLS:", JSON.stringify(s3SignedURLs));
+        function useSignedURLs(s3SignedURLs) {
+            console.log("Signed URLS:", JSON.stringify(s3SignedURLs));
 
-		form.getformfields(req, renderForm);
+            form.getformfields(req, renderForm);
 
-		function renderForm(formFields) { 
-			console.log('Form Fields=%s', JSON.stringify(formFields, null, " "));
+            function renderForm(formFields) { 
+                console.log('Form Fields=%s', JSON.stringify(formFields, null, " "));
 
-			res.render('users', {
-				userid: userid, 
-				imageList: s3SignedURLs,
-				formFields: formFields
-			});
-		}
-	 }
+                res.render('users', {
+                    userid: userid, 
+                    imageList: s3SignedURLs,
+                    formFields: formFields
+                });
+            }
+        }
     }
 
     function getS3SignedURLs(imageList, callback) {
-	creds.getCreds(useCreds);
+        creds.getCreds(useCreds);
 
-	function useCreds(creds) {
-		var s3SignedURLs = new Array();
-		var s3 = new AWS.S3({credentials: creds});
+        function useCreds(creds) {
+            var s3SignedURLs = new Array();
+            var s3 = new AWS.S3({credentials: creds});
 
-		for(var i = 0; i < imageList.length; ++i) {
-			var newObj = new Object();
-			for(var p in imageList[i]) {
-				var key = imageList[i][p];
+            for(var i = 0; i < imageList.length; ++i) {
+                var newObj = new Object();
+                for(var p in imageList[i]) {
+                    var key = imageList[i][p];
 
-				var s3params = {
-					Bucket: consts.s3upload.bucket,
-					Key: key
-				};
-				console.log("getSignedUrl params=", JSON.stringify(s3params));
-				var url = s3.getSignedUrl('getObject', s3params);
-				console.log("SignedUrl= ", url);
+                    var s3params = {
+                        Bucket: consts.s3upload.bucket,
+                        Key: key
+                    };
+                    console.log("getSignedUrl params=", JSON.stringify(s3params));
+                    var url = s3.getSignedUrl('getObject', s3params);
+                    console.log("SignedUrl= ", url);
 
-				newObj[p] = url;
+                    newObj[p] = url;
 
-			}
-			s3SignedURLs.push(newObj);
-		}
-		callback(s3SignedURLs);
-	}
+                }
+                s3SignedURLs.push(newObj);
+            }
+            callback(s3SignedURLs);
+        }
 
-	}
+    }
 }
 
 
