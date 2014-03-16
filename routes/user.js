@@ -20,7 +20,7 @@ exports.list = function(req, res) {
     AWS.config.update({region: consts.region});
     var dynamoDB = new AWS.DynamoDB();
 
-    params = {
+    var params = {
         TableName: consts.dynamoDB.tableName,
         KeyConditions: {
             userid: {
@@ -49,28 +49,31 @@ exports.list = function(req, res) {
             var imgEntry = {
                 orgImg: userid + '/' + 'org' + '/' + imgId
             };
-            if(item.transforms == undefined) return; // don't process the transforms set if it is missing
-
-            var renditions = item.transforms.SS;
-
-            renditions.forEach(function(format) {
-                imgEntry[format + "Img"]= userid + '/' + format + '/' + imgId;
-            });
+	    if(item.transforms != undefined)  {
+	    	var renditions = item.transforms.SS;
+		renditions.forEach(function(format) {
+			imgEntry[format + "Img"]= userid + '/' + format + '/' + imgId;
+			});
+	    }
             imageList.push(imgEntry);
         });
 
         console.log("ImageList: ", JSON.stringify(imageList));
 
         var s3SignedURLs = getS3SignedURLs(imageList);
+	console.log("Signed URLS:", JSON.stringify(s3SignedURLs));
 
-        var formFields = form.getformfields(req) 
-            console.log('Form Fields=%s', JSON.stringify(formFields, null, " "));
+        form.getformfields(req, renderForm);
 
-        res.render('users', {
-            userid: userid, 
-            imageList: s3SignedURLs,
-            formFields: formFields
-        });
+	function renderForm(formFields) { 
+		console.log('Form Fields=%s', JSON.stringify(formFields, null, " "));
+
+		res.render('users', {
+			userid: userid, 
+			imageList: s3SignedURLs,
+			formFields: formFields
+			});
+         }
     }
 
     function getS3SignedURLs(imageList) {
@@ -82,11 +85,13 @@ exports.list = function(req, res) {
             for(var p in imageList[i]) {
                 var key = imageList[i][p];
 
-                var params = {
+                var s3params = {
                     Bucket: consts.s3upload.bucket,
                     Key: key
                 };
-                var url = s3.getSignedUrl('getObject', params);
+		console.log("getSignedUrl params=", JSON.stringify(s3params));
+                var url = s3.getSignedUrl('getObject', s3params);
+		console.log("SignedUrl= ", url);
                 
                 newObj[p] = url;
 
