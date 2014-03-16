@@ -1,14 +1,16 @@
 #uploadform
-    form(action="#{formFields.actionURL}", method="post", enctype="multipart/form-data")
-        input(type="hidden", name="key", value="#{formFields.key}")
-        input(type="hidden", name="AWSAccessKeyId", value="#{formFields.accesskeyid}")
-        input(type="hidden", name="acl", value="#{formFields.acl}")
+form(action="#{formFields.actionURL}", method="post", enctype="multipart/form-data")
+    input(type="hidden", name="key", value="#{formFields.key}")
+    input(type="hidden", name="AWSAccessKeyId", value="#{formFields.accesskeyid}")
+    input(type="hidden", name="acl", value="#{formFields.acl}")
+    if(formFields.securityToken != undefined)
         input(type="hidden", name="x-amz-security-token", value="#{formFields.securityToken}")
-        input(type="hidden", name="success_action_redirect", value="#{formFields.successRedirectURL}")
-        input(type="hidden", name="policy", value="#{formFields.policy}")
-        input(type="hidden", name="signature", value="#{formFields.signature}")
-        input(type="hidden", name="Content-Type", value="#{formFields.contentTypePrefix}")
+    
+    input(type="hidden", name="success_action_redirect", value="#{formFields.successRedirectURL}")
+    input(type="hidden", name="policy", value="#{formFields.policy}")
+    input(type="hidden", name="signature", value="#{formFields.signature}")
+    input(type="hidden", name="Content-Type", value="#{formFields.contentTypePrefix}")
 
-        label File to upload:
-        input(type="file",name="file")
-        input(type="submit", value="Upload to S3")
+    label File to upload:
+    input(type="file",name="file")
+    input(type="submit", value="Upload to S3")

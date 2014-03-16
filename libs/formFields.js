@@ -27,11 +27,14 @@ exports.getformfields = function(req) {
             {key: s3key},
             {acl: consts.s3upload.acl},
             {success_action_redirect: successRedirectURL},
-            {"x-amz-security-token": securityToken},
             ["starts-with", "$Content-Type", consts.s3upload.contentTypePrefix],
             ["content-length-range", 0, consts.s3upload.maxSize]
         ]
     };
+
+    if(securityToken != undefined) {
+        policy.conditions.add({"x-amz-security-token": securityToken});
+    }
 
     var policystr = JSON.stringify(policy);
     console.log("Policy String = (%s)", policystr);
