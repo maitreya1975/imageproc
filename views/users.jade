@@ -9,5 +9,8 @@ block content
   else
     for image in imageList
       img(src='#{image.orgImg}')
-      img(src='#{image.sepiaImg}')
-      img(src='#{image.montageImg}')
+      if image.sepiaImg != undefined
+        img(src='#{image.sepiaImg}')
+      if image.montageImg != undefined
+        img(src='#{image.montageImg}')
+      hr
